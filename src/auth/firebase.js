@@ -2,32 +2,46 @@ import { initializeApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 
 //* https://firebase.google.com/docs/auth/web/start
 //* https://console.firebase.google.com/ => project settings
 const firebaseConfig = {
-  apiKey: "AIzaSyCAuuc8ykQTCWdFoSNl2HAGs87O0rYOe8Q",
-  authDomain: "movieapp-7e6a5.firebaseapp.com",
-  projectId: "movieapp-7e6a5",
-  storageBucket: "movieapp-7e6a5.appspot.com",
-  messagingSenderId: "769002371615",
-  appId: "1:769002371615:web:c93bdc78f0950f26fff32a",
+  apiKey: process.env.REACT_APP_apiKey,
+  authDomain: process.env.REACT_APP_authDomain,
+  projectId: process.env.REACT_APP_projectId,
+  storageBucket: process.env.REACT_APP_storageBucket,
+  messagingSenderId: process.env.REACT_APP_messagingSenderId,
+  appId: process.env.REACT_APP_appId,
 };
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCg1fCEO8i7MQnM3SiMJPiVcADp_NI9XTw",
+//   authDomain: "movie-app-1-6ec44.firebaseapp.com",
+//   projectId: "movie-app-1-6ec44",
+//   storageBucket: "movie-app-1-6ec44.appspot.com",
+//   messagingSenderId: "950886341278",
+//   appId: "1:950886341278:web:f4feb188157227da55398f",
+// };
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 
-export const createUser = async (email, password, navigate) => {
+export const createUser = async (email, password, displayName, navigate) => {
   try {
     let userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
+    await updateProfile(auth.currentUser, {
+      displayName: displayName,
+    });
     navigate("/");
     console.log(userCredential);
   } catch (err) {
@@ -35,6 +49,8 @@ export const createUser = async (email, password, navigate) => {
   }
 };
 
+//* https://console.firebase.google.com/
+//* => Authentication => sign-in-method => enable Email/password
 export const signIn = async (email, password, navigate) => {
   try {
     let userCredential = await signInWithEmailAndPassword(
@@ -51,5 +67,17 @@ export const signIn = async (email, password, navigate) => {
 
 export const logOut = () => {
   signOut(auth);
-  alert("logged out succesfully");
+  alert("logged out successfully");
+};
+
+export const userObserver = (setCurrentUser) => {
+  onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+      setCurrentUser(currentUser);
+      // ...
+    } else {
+      // User is signed out
+      setCurrentUser(false);
+    }
+  });
 };

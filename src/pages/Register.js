@@ -8,17 +8,21 @@ const Register = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigate = useNavigate();
+
   const handleSubmit = (e) => {
+    const displayName = `${firstName} ${lastName}`;
     e.preventDefault();
-    createUser(email, password, navigate);
+    createUser(email, password, displayName, navigate);
 
     console.log(firstName, lastName);
   };
   return (
     <div className="d-flex justify-content-center">
-      <div className="form-image">
-        <img src={"https://picsum.photos/800/800"} alt="sample-movie" />
-      </div>
+      {window.innerWidth > 700 && (
+        <div className="form-image">
+          <img src={"https://picsum.photos/800/800"} alt="sample-movie" />
+        </div>
+      )}
       <div className="register-form">
         <h1 className="form-title display-3">Register</h1>
         <form id="register" onSubmit={handleSubmit}>
@@ -56,7 +60,7 @@ const Register = () => {
               type="email"
               className="form-control"
               id="email"
-              placeholder="example@example.com"
+              placeholder="Enter your email adress.."
               onChange={(e) => setEmail(e.target.value)}
               required
             />
@@ -78,7 +82,7 @@ const Register = () => {
             type="submit"
             className="btn btn-primary form-control"
             value="Register"
-            onSubmit={handleSubmit}
+            // onSubmit={handleSubmit}
           />
         </form>
       </div>
