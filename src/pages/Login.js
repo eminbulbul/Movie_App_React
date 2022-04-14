@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signIn, signUpProvider } from "../auth/firebase";
+import { forgotPassword, signIn, signUpProvider } from "../auth/firebase";
 
 const Login = () => {
   const [email, setEmail] = useState();
@@ -12,6 +12,7 @@ const Login = () => {
     signIn(email, password, navigate);
     console.log(email, password);
   };
+
   const handleProviderLogin = () => {
     signUpProvider(navigate);
   };
@@ -51,6 +52,9 @@ const Login = () => {
               required
             />
           </div>
+          <div className="link" onClick={() => forgotPassword(email)}>
+            Forgot password?
+          </div>
           <input
             type="submit"
             className="btn btn-primary form-control"
@@ -59,7 +63,7 @@ const Login = () => {
           />
         </form>
         <button
-          className="btn btn-primary form-control "
+          className="btn btn-primary form-control"
           onClick={handleProviderLogin}
         >
           Continue with Google
